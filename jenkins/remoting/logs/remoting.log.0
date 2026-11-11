@@ -1,0 +1,10 @@
+Nov 11, 2026 3:10:23 PM hudson.remoting.Launcher createEngine
+INFO: Setting up agent: Slave1
+Nov 11, 2026 3:10:23 PM hudson.remoting.Engine startEngine
+INFO: Using Remoting version: 3386.v353e57a_1b_ea_0
+Nov 11, 2026 3:10:23 PM org.jenkinsci.remoting.engine.WorkDirManager initializeWorkDir
+INFO: Using D:\college\7th sem\Devops\jenkins\remoting as a remoting work directory
+Nov 11, 2026 3:10:24 PM hudson.remoting.Launcher$CuiListener status
+INFO: WebSocket connection open
+Nov 11, 2026 3:10:24 PM hudson.remoting.Launcher$CuiListener status
+INFO: Connected

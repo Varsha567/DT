@@ -1,0 +1,171 @@
+Experiment 1 & 2: DevOps Principles, Practices, & Version Control Systems (SCM)
+Core Concepts: Understanding the DevOps lifecycle (Continuous Development, Integration, Testing, Deployment, Monitoring), collaboration workflows, and SCM basics (centralized vs. distributed VCS like Git).
+
+No terminal commands required for theory experiments, but fundamental conceptual definitions should be reviewed.
+
+Experiment 3: Git & GitHub Operations
+Configuration & Initialization
+Bash
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+git init
+git clone <repository-url>
+Tracking, Committing, & Pushing
+Bash
+git status
+git add .
+git commit -m "Commit message: implemented lab feature"
+git remote add origin <repository-url>
+git branch -M main
+git push -u origin main
+Experiment 4: Jenkins Installation & Build Job (CI)
+Installation on Ubuntu/WSL
+Bash
+sudo apt update && sudo apt install fontconfig openjdk-17-jre -y
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt update && sudo apt install jenkins -y
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+Get Initial Admin Password
+Bash
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+Access UI: Open http://localhost:8080 in your web browser.
+
+Experiment 5: Jenkins Master-Slave Architecture
+Procedure Summary:
+
+Go to Jenkins Dashboard → Manage Jenkins → Nodes → New Node.
+
+Define the node name, select Permanent Agent, and configure the remote root directory.
+
+Set launch method to Launch agent via connecting to the controller (or via SSH).
+
+Run the provided Java command or agent connection script on the target slave machine to link it back to the master.
+
+Experiment 6: Docker Architecture & Container Lifecycle
+Installation & Status (Ubuntu/WSL)
+Bash
+sudo apt update
+sudo apt install docker.io -y[cite: 5]
+sudo systemctl start docker[cite: 5]
+sudo systemctl enable docker[cite: 5]
+docker --version[cite: 5]
+sudo docker info[cite: 5]
+Container Lifecycle Commands
+Bash
+sudo docker pull ubuntu[cite: 6]
+sudo docker images[cite: 6]
+sudo docker run -it --name mycontainer ubuntu bash[cite: 6]
+sudo docker ps[cite: 6]       # List running containers
+sudo docker ps -a[cite: 6]     # List all containers (including stopped)
+sudo docker start mycontainer[cite: 6]
+sudo docker stop mycontainer[cite: 6]
+sudo docker restart mycontainer[cite: 6]
+sudo docker rm mycontainer[cite: 6]
+sudo docker rmi ubuntu[cite: 6]     # Remove image
+Experiment 7: Dockerfile Instructions & Web App Deployment
+Sample Dockerfile Syntax
+Dockerfile
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
+COPY index.html .
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+Build & Run Container
+Bash
+sudo docker build -t mywebapp .
+sudo docker run -d -p 8080:80 --name webcontainer mywebapp[cite: 8]
+Verify: Open http://localhost:8080[cite: 8].
+
+Experiment 8: Deploying on Kubernetes Cluster (Minikube)
+Start Cluster & Verify
+Bash
+minikube start --driver=docker[cite: 10]
+minikube status[cite: 11]
+kubectl get nodes[cite: 11]
+Apply Manifests & Check Status
+Bash
+kubectl apply -f deployment.yaml[cite: 12]
+kubectl apply -f service.yaml[cite: 12]
+kubectl get deployments[cite: 12]
+kubectl get pods[cite: 12]
+kubectl get services[cite: 12]
+Access & Clean Up
+Bash
+kubectl port-forward service/<service-name> 8080:80[cite: 12]
+kubectl delete -f service.yaml[cite: 13]
+kubectl delete -f deployment.yaml[cite: 13]
+minikube stop
+Experiment 9: Puppet Installation & Configuration (Pull-Based)
+Installation (Ubuntu/WSL)
+Bash
+sudo apt update && sudo apt upgrade -y[cite: 19]
+sudo apt install puppet -y
+puppet --version[cite: 20]
+Applying a Standalone Manifest (site.pp)
+Bash
+mkdir -p ~/puppet-lab && cd ~/puppet-lab
+nano site.pp
+(Sample code for Apache provisioning)[cite: 20]:
+
+Puppet
+package { 'apache2':
+  ensure => installed,
+}
+file { '/var/www/html/index.html':
+  ensure  => file,
+  content => 'Hello World! Configured using Puppet.',
+}
+service { 'apache2':
+  ensure  => running,
+  enable  => true,
+  require => Package['apache2'],
+}
+Execute & Verify
+Bash
+sudo puppet apply site.pp[cite: 21]
+sudo systemctl status apache2[cite: 21]
+Experiment 10: Puppet Building Blocks (Manifests, Modules, Classes, Functions)
+1. Modules Test
+Bash
+mkdir -p mymodule/manifests
+nano mymodule/manifests/init.pp
+(Code snippet inside init.pp):
+
+Puppet
+class mymodule {
+  file { '/tmp/module-demo.txt':
+    ensure  => file,
+    content => 'Puppet Module Example',
+  }
+}
+Run module test:
+
+Bash
+nano module_test.pp  # contents: include mymodule
+sudo puppet apply --modulepath=. module_test.pp
+2. Classes Test
+Bash
+nano class_demo.pp
+(Code snippet inside class_demo.pp):
+
+Puppet
+class webserver {
+  package { 'apache2': ensure => installed }
+  service { 'apache2': ensure => running, enable => true, require => Package['apache2'] }
+}
+include webserver
+Run class manifest:
+
+Bash
+sudo puppet apply class_demo.pp
+3. Functions & Stdlib Setup
+If testing standard functions or string utilities, ensure the standard library is available:
+
+Bash
+sudo puppet module install puppetlabs-stdlib
+Run function script:
+
+Bash
+sudo puppet apply function_demo.pp
